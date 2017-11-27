@@ -30,8 +30,10 @@ class Header extends Component {
                             }}>logout</div>
                         </div>
                         :
-                        <Link to='/login' className='ml1 no-underline black'>login</Link>
+                        <Link to='/login' className='ml1 pt1 no-underline black'>login</Link>
                     }
+                    <div className='ml1 pt1'>|</div>
+                    <Link to='/tutorial' className='ml1 pt1 no-underline black'>tutorial</Link>
                 </div>
             </div>
         )

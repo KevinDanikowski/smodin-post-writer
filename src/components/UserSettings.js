@@ -3,11 +3,13 @@ import { GC_USER_ID } from '../constants'
 import { gql, graphql, compose } from 'react-apollo'
 
 class UserSettings extends Component {
-
-    state = {
-        email: '',
-        password: '',
-        name: ''
+    constructor(props) {
+        super(props)
+        this.state = {
+            email: '',
+            password: '',
+            name: ''
+        }
     }
     render(){
         const userId = localStorage.getItem(GC_USER_ID)

@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import ParameterList from './ParameterList'
 import SocialPostList from './SocialPostList'
 import IndustryList from './IndustryList'
-import ParameterAndPostSearch from './ParameterAndPostSearch'
+import SchedulePage from './SchedulePage'
+import BuildPage from './BuildPage'
+import ConsoleRibbon from './ConsoleRibbon'
 
 class Console extends Component {
     constructor(props) {
@@ -10,12 +12,14 @@ class Console extends Component {
         const primaryIndustryId = 'cj97jd2670t6501027go4pm46'
         const primaryIndustry = 'Generic'
         const defaultSearchText = ''
-        const defaultTab = 'parameters'
+        const defaultTab = 'build'
+        const defaultScheduleType = 'monthly'
         this.state = {
             selectedIndustryId: primaryIndustryId,
             selectedIndustry: primaryIndustry,
             searchText: defaultSearchText,
             tab: defaultTab,
+            scheduleType: defaultScheduleType
         }
     }
     componentWillUpdate(nextProps, nextState) {
@@ -34,14 +38,16 @@ class Console extends Component {
                             receiveIndustry={this._passIndustry}/>
                 </div>
                 <div className='flex-1 fill-area-content fill-area-col'>
-                    <div className='bg-gray pt2 pb2'>
-                        <ParameterAndPostSearch
+                    <div className='bg-gray pt2 pb2 overflow-x-hidden overflow-y-hidden'>
+                        <ConsoleRibbon
                             defaultSearchText={this.state.searchText}
                             defaultTab={this.state.tab}
+                            defaultScheduleType={this.state.scheduleType}
                             receiveSearchText={this._passSearch}
-                            receiveTab={this._passTab}/>
+                            receiveTab={this._passTab}
+                            receiveScheduleType={this._passScheduleType}/>
                     </div>
-                    <div className='flex-1 fill-area-content pl3'>
+                    <div className='flex-1 fill-area-content'>
                         {(this.state.tab === 'parameters')?
                         <ParameterList
                             selectedIndustry={this.state.selectedIndustry}
@@ -52,6 +58,15 @@ class Console extends Component {
                             selectedIndustry={this.state.selectedIndustry}
                             selectedIndustryId={this.state.selectedIndustryId}
                             searchText={this.state.searchText}/> : null }
+                        {(this.state.tab === 'schedule')?
+                        <SchedulePage
+                            selectedIndustry={this.state.selectedIndustry}
+                            selectedIndustryId={this.state.selectedIndustryId}
+                            scheduleType={this.state.scheduleType}/> : null }
+                        {(this.state.tab === 'build')?
+                            <BuildPage
+                                selectedIndustry={this.state.selectedIndustry}
+                                selectedIndustryId={this.state.selectedIndustryId}/> : null }
                     </div>
                 </div>
             </div>
@@ -65,6 +80,9 @@ class Console extends Component {
     }
     _passTab = (tab) => {
         this.setState({ tab: tab })
+    }
+    _passScheduleType = (scheduleType) => {
+        this.setState({ scheduleType: scheduleType })
     }
 }
 

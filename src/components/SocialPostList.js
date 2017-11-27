@@ -71,9 +71,9 @@ class SocialPostList extends Component {
         }
         return (
             <div className='flex-1 flexbox-parent-console'>
-                <div className='flex-1 fill-area-content overflow-y-scroll'>
+                <div className='flex-1 fill-area-content overflow-y-scroll overflow-x-hidden'>
                     <SocialPostArrayMap />
-                    <div className='inline-flex items-center mt2 w-100 mb2'>
+                    <div className='inline-flex items-center mt3 w-100 ml2 mb2'>
                         <input
                             className='flex-1 pa1 br3 b--solid-ns b--black-40'
                             onChange={(e) => this.setState({ newSocialPost: e.target.value })}

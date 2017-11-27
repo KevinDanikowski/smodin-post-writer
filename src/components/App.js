@@ -5,6 +5,7 @@ import Login from './Login'
 import Console from './Console'
 import UserSettings from './UserSettings'
 import IndustriesPage from './IndustriesPage'
+import TutorialPage from './TutorialPage'
 import { GC_USER_ID } from '../constants'
 
 class App extends Component {
@@ -24,6 +25,7 @@ class App extends Component {
                   <Route exact path='/console' component={Console} />
                   <Route exact path='/settings' component={UserSettings} />
                   <Route exact path='/industries' component={IndustriesPage} />
+                  <Route exact path='/tutorial' component={TutorialPage} />
               </Switch>
             </div>
             <div className='flex bg-black-20 b--t-smodin-red justify-between'>
