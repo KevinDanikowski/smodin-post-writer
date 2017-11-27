@@ -21,9 +21,13 @@ class MonthlyDatePostScheduler extends Component {
             const sortedMonthlyDateSchedules = _.sortBy((_.sortBy((_.sortBy(monthlyDateSchedules, 'minute')), 'hour')), 'monthDate')
             const MonthlyDateSchedules = () => {
                 return sortedMonthlyDateSchedules.map((date,index) => {
+                    let dateMonthDate = date.monthDate
+                    if (date.monthDate.substr(0,1) === '0') {
+                        dateMonthDate = date.monthDate.slice(1,2)
+                    }
                     return (
                         <div key={index} className='h20p flex items-center justify-center mt1'>
-                            <span className='font-couriernew fw4 tc'>{date.monthDate} at {date.hour}:{date.minute}</span>
+                            <span className='font-couriernew fw4 tc'>{dateMonthDate} at {date.hour}:{date.minute}</span>
                             <span className='ml3 fw6 red hover-white pointer'
                                   onClick={() => {this._deleteMonthlyDateSchedule(date.id)}}>X</span>
                         </div>
@@ -37,6 +41,10 @@ class MonthlyDatePostScheduler extends Component {
             )
         }
         const FullDropdown = () => {
+            const monthlyDatesSimple = monthlyDates.map(date =>{
+                if (date.substr(0,1) === '0') return date.slice(1,2)
+                else return date
+            })
             return (
                 <div className='self-center flex justify-center flex-wrap items-center ma1'>
                     <div className='flex inline-flex items-center'>
@@ -44,7 +52,7 @@ class MonthlyDatePostScheduler extends Component {
                             className='w100p ma2'
                             onChange={async (object)=> await this.setState({monthDate: object.value})}
                             value={this.state.monthDate}
-                            placeholder='date' options={monthlyDates} />
+                            placeholder='date' options={monthlyDatesSimple} />
                         <div className=' fw6 mr2 ml2'>at</div>
                     </div>
                     <div className='flex inline-flex items-center'>
@@ -73,6 +81,8 @@ class MonthlyDatePostScheduler extends Component {
                 <h3 className='tc bg-black-20 mt0 pt2 pb2 mb1'>Monthly Dates</h3>
                 <FullDropdown />
                 <UserPostTimes />
+                <div className='tc pointer bg-green white ba br2 b--black-20'
+                     onClick={()=>{this._generateRecommendedMonthlySchedule()}}>Generate Recommended Monthly Date Schedule</div>
             </div>
         )
     }
@@ -81,11 +91,16 @@ class MonthlyDatePostScheduler extends Component {
     }
     _addMonthlyDateSchedule = async () => {
         const monthlyScheduleType = 'monthDate'
-        const monthDate = this.state.monthDate
+        let monthDate = this.state.monthDate
+        if (monthDate.length === 1) monthDate = '0'.concat(monthDate)
         const monthDay = ''
         const hour = this.state.hour
         const minute = this.state.minute
         await this.props.addMonthlyPostSchedule(monthlyScheduleType, monthDate, monthDay, hour, minute)
+        this.setState({ monthlyDate: '', hour: '', minute: ''})
+    }
+    _generateRecommendedMonthlySchedule = async () => {
+        await this.props.generateRecommendedMonthlySchedule('monthDate')
         this.setState({ monthlyDate: '', hour: '', minute: ''})
     }
 }

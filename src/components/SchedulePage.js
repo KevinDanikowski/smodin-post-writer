@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { graphql, gql, compose } from 'react-apollo'
-import { GC_USER_ID, dayArray } from '../constants'
+import { GC_USER_ID, dayArray, defaultWeeklyPostSchedules, defaultMonthlyDatePostSchedules, defaultMonthlyDayPostSchedules } from '../constants'
 import MonthlyDatePostScheduler from './MonthlyDatePostScheduler'
 import MonthlyDayPostScheduler from './MonthlyDayPostScheduler'
 import Scheduler from './Scheduler'
+import { confirmAlert } from 'react-confirm-alert'
+import 'react-confirm-alert/src/react-confirm-alert.css'
 
 class SchedulePage extends Component {
     constructor(props) {
@@ -33,7 +35,7 @@ class SchedulePage extends Component {
                 const weeklySchedulesLoading = [{hour: '...', minute: '...'}]
                 return dayArray.map((dayObject, index) => {
                     return (dayObject.number < '5')?
-                        <div key={index} className='w25pr'>
+                        <div key={index} className='w25pr mw160p'>
                             <Scheduler day={dayObject.day}
                                        weeklySchedules={weeklySchedulesLoading}/>
                         </div> : null
@@ -44,7 +46,7 @@ class SchedulePage extends Component {
                 const weeklySchedulesLoading = [{hour: 'ERR', minute: 'ERR'}]
                 return dayArray.map((dayObject, index) => {
                     return (dayObject.number < '5')?
-                        <div key={index} className='w25pr'>
+                        <div key={index} className='w25pr mw160p'>
                             <Scheduler day={dayObject.day}
                                        weeklySchedules={weeklySchedulesLoading}/>
                         </div> : null
@@ -54,7 +56,7 @@ class SchedulePage extends Component {
             return dayArray.map((dayObject, index) => {
                 const weeklySchedules = this.props.allPostSchedulesQuery.allPostSchedules[0].weeklySchedules.filter((schedule)=> {return schedule.day == dayObject.number})
                 return (dayObject.number < '5')?
-                    <div key={index} className='w25pr'>
+                    <div key={index} className='w25pr mw160p'>
                         <Scheduler day={dayObject.day}
                             dayNumber={dayObject.number}
                             weeklySchedules={weeklySchedules}
@@ -69,7 +71,7 @@ class SchedulePage extends Component {
                 const weeklySchedulesLoading = [{hour: '...', minute: '...'}]
                 return dayArray.map((dayObject, index) => {
                         return (dayObject.number > '4')?
-                            <div key={index} className='w25pr'>
+                            <div key={index} className='w25pr mw160p'>
                                 <Scheduler day={dayObject.day}
                                            weeklySchedules={weeklySchedulesLoading}/>
                             </div> : null
@@ -90,7 +92,7 @@ class SchedulePage extends Component {
             return dayArray.map((dayObject, index) => {
                     const weeklySchedules = this.props.allPostSchedulesQuery.allPostSchedules[0].weeklySchedules.filter((schedule)=> {return schedule.day == dayObject.number})
                     return (dayObject.number > '4')?
-                        <div key={index} className='w25pr'>
+                        <div key={index} className='w25pr mw160p'>
                             <Scheduler day={dayObject.day}
                                        dayNumber={dayObject.number}
                                        weeklySchedules={weeklySchedules}
@@ -109,9 +111,9 @@ class SchedulePage extends Component {
                     <div className='h-50 flex no-wrap justify-start'>
                         <DayScheduleArrayBottomRow />
                         <div className='w25pr flex'>
-                            <div className=' w160p h-100 flex items-end'>
-                                <div className='tc bg-green white ba br2 b--black-20'
-                                    onClick={(e)=>console.log('need to generate schedule with ALERT')}>Generate Recommended Schedule</div>
+                            <div className=' w160p h-100 flex items-center'>
+                                <div className='tc pointer bg-green white ba br2 b--black-20'
+                                     onClick={()=>{this._handleGenerateRecommendedWeeklySchedule()}}>Generate Recommended Schedule</div>
                             </div>
                         </div>
                     </div>
@@ -148,12 +150,14 @@ class SchedulePage extends Component {
                         <MonthlyDatePostScheduler
                             deleteMonthlyPostSchedule={this._handleDeleteMonthlyPostSchedule}
                             addMonthlyPostSchedule={this._handleAddMonthlyPostSchedule}
+                            generateRecommendedMonthlySchedule={this._handleGenerateRecommendedMonthlySchedule}
                             monthlyDateSchedules={monthlyDateSchedules()}/>
                     </div>
                     <div className='flex justify-center ma2 w-50 mw275p'>
                         <MonthlyDayPostScheduler
                             deleteMonthlyPostSchedule={this._handleDeleteMonthlyPostSchedule}
                             addMonthlyPostSchedule={this._handleAddMonthlyPostSchedule}
+                            generateRecommendedMonthlySchedule={this._handleGenerateRecommendedMonthlySchedule}
                             monthlyDateSchedules={monthlyDaySchedules()}/>
                     </div>
                 </div>
@@ -273,6 +277,62 @@ class SchedulePage extends Component {
                 })
             }
         })
+    }
+    _handleGenerateRecommendedWeeklySchedule = async () => {
+        confirmAlert({
+            title: 'Are you sure?',
+            message: 'All your weekly schedules will be deleted',
+            confirmLabel: 'Confirm',
+            cancelLabel: 'Cancel',
+            onConfirm: () => {
+                deleteExistingWeeklySchedules()
+                addRecommendedWeeklySchedules()
+            }
+        })
+        const deleteExistingWeeklySchedules = async () => {
+            this.props.allPostSchedulesQuery.allPostSchedules[0].weeklySchedules.map(async (schedule) => {
+                this._handleDeleteWeeklyPostSchedule(schedule.id)
+            })
+        }
+        const addRecommendedWeeklySchedules = async () => {
+            defaultWeeklyPostSchedules.map(async (schedule) => {
+                this._handleAddWeeklyPostSchedule(schedule.day, schedule.hour, schedule.minute)
+            })
+        }
+    }
+    _handleGenerateRecommendedMonthlySchedule = async (monthlyScheduleType) => {
+        confirmAlert({
+            title: 'Are you sure?',
+            message: 'All your monthly schedules will be deleted',
+            confirmLabel: 'Confirm',
+            cancelLabel: 'Cancel',
+            onConfirm: () => {
+                deleteExistingMonthlySchedules()
+                addRecommendedMonthlySchedules()
+            }
+        })
+        let defaultMonthlyPostSchedules = []
+        if (monthlyScheduleType === 'monthDate') {
+            defaultMonthlyPostSchedules = defaultMonthlyDatePostSchedules
+        }
+        if (monthlyScheduleType === 'monthDay') {
+            defaultMonthlyPostSchedules = defaultMonthlyDayPostSchedules
+        }
+        const deleteExistingMonthlySchedules = async () => {
+            this.props.allPostSchedulesQuery.allPostSchedules[0].monthlySchedules.map(async (schedule) => {
+                this._handleDeleteMonthlyPostSchedule(schedule.id)
+            })
+        }
+        const addRecommendedMonthlySchedules = async () => {
+            defaultMonthlyPostSchedules.map(async (schedule) => {
+                this._handleAddMonthlyPostSchedule(
+                    schedule.monthlyScheduleType,
+                    schedule.monthDate,
+                    schedule.monthDay,
+                    schedule.hour,
+                    schedule.minute)
+            })
+        }
     }
 }
 const ALL_POST_SCHEDULES_QUERY = gql`

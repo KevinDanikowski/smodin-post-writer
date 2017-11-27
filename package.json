@@ -41,6 +41,7 @@
     "react-addons-update": "^15.6.2",
     "react-apollo": "^1.4.16",
     "react-autosize-textarea": "^0.4.9",
+    "react-confirm-alert": "^1.0.8",
     "react-dev-utils": "^4.1.0",
     "react-dom": "^16.0.0",
     "react-dropdown": "^1.3.2",

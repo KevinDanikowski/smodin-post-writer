@@ -85,6 +85,8 @@ class MonthlyDayPostScheduler extends Component {
                 <h3 className='tc bg-black-20 mt0 pt2 pb2 mb1'>Monthly Week Days</h3>
                 <FullDropdown />
                 <UserPostTimes />
+                <div className='tc pointer bg-green white ba br2 b--black-20'
+                     onClick={()=>{this._generateRecommendedMonthlySchedule()}}>Generate Recommended Monthly Day Schedule</div>
             </div>
         )
     }
@@ -101,6 +103,10 @@ class MonthlyDayPostScheduler extends Component {
         const minute = this.state.minute
         await this.props.addMonthlyPostSchedule(monthlyScheduleType, monthDate, monthDay, hour, minute)
         this.setState({ monthlyDate: '', hour: '', minute: ''})
+    }
+    _generateRecommendedMonthlySchedule = async () => {
+        await this.props.generateRecommendedMonthlySchedule('monthDay')
+        this.setState({ dayPosition: '', day: '', hour: '', minute: ''})
     }
 }
 export default MonthlyDayPostScheduler

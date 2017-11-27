@@ -551,8 +551,11 @@ input[type=checkbox] {
 .font-couriernew {
   font-family: "Courier New";
 }
+.mw160p {
+  min-width: 160px;
+}
 .w160p {
-  max-width: 160px;
+  width: 160px;
   min-width: 160px;
 }
 .w100p {

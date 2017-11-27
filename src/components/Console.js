@@ -12,14 +12,16 @@ class Console extends Component {
         const primaryIndustryId = 'cj97jd2670t6501027go4pm46'
         const primaryIndustry = 'Generic'
         const defaultSearchText = ''
-        const defaultTab = 'build'
-        const defaultScheduleType = 'monthly'
+        const defaultTab = 'posts'
+        const defaultScheduleType = 'weekly'
+        const defaultBuildView = 'calendar'
         this.state = {
             selectedIndustryId: primaryIndustryId,
             selectedIndustry: primaryIndustry,
             searchText: defaultSearchText,
             tab: defaultTab,
-            scheduleType: defaultScheduleType
+            scheduleType: defaultScheduleType,
+            buildView: defaultBuildView
         }
     }
     componentWillUpdate(nextProps, nextState) {
@@ -43,9 +45,11 @@ class Console extends Component {
                             defaultSearchText={this.state.searchText}
                             defaultTab={this.state.tab}
                             defaultScheduleType={this.state.scheduleType}
+                            defaultBuildView={this.state.buildView}
                             receiveSearchText={this._passSearch}
                             receiveTab={this._passTab}
-                            receiveScheduleType={this._passScheduleType}/>
+                            receiveScheduleType={this._passScheduleType}
+                            receiveBuildView={this._passBuildView}/>
                     </div>
                     <div className='flex-1 fill-area-content'>
                         {(this.state.tab === 'parameters')?
@@ -64,9 +68,11 @@ class Console extends Component {
                             selectedIndustryId={this.state.selectedIndustryId}
                             scheduleType={this.state.scheduleType}/> : null }
                         {(this.state.tab === 'build')?
-                            <BuildPage
-                                selectedIndustry={this.state.selectedIndustry}
-                                selectedIndustryId={this.state.selectedIndustryId}/> : null }
+                        <BuildPage
+                            selectedIndustry={this.state.selectedIndustry}
+                            selectedIndustryId={this.state.selectedIndustryId}
+                            scheduleType={this.state.scheduleType}
+                            buildView={this.state.buildView}/> : null }
                     </div>
                 </div>
             </div>
@@ -83,6 +89,9 @@ class Console extends Component {
     }
     _passScheduleType = (scheduleType) => {
         this.setState({ scheduleType: scheduleType })
+    }
+    _passBuildView = (buildView) => {
+        this.setState({ buildView: buildView })
     }
 }
 
