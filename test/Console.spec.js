@@ -7,4 +7,7 @@ describe('Console item', () => {
     it('should be a div', () => {
         expect(wrapper.type()).to.eql('div')
     })
+    it('should not rerender on state change', () => {
+        expect(wrapper.type()).to.eql('div')
+    })
 })

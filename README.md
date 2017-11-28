@@ -29,4 +29,11 @@ This platform was built using
 - Add images to posts
 - And much more!
 
+## Current Tasks in Order
+1. Implement testing in the app
+2. Add images to social posts
+3. Revise entire interface to specs
+4. Add Crons job and post scheduler in docker container
+5. Redesign file layout
+
 Copywrite  OTA AI, Inc. 2017, Author Kevin Danikowski

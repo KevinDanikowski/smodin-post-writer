@@ -11,3 +11,7 @@
 # Key Sites
 https://semaphoreci.com/community/tutorials/testing-react-components-with-enzyme-and-mocha
 https://www.youtube.com/watch?v=f6Uk0qS_Lho
+
+# What to test
+https://daveceddia.com/what-to-test-in-react-app/
+jest samples - https://www.undefinednull.com/2015/05/03/react-tdd-example-unit-testing-and-building-a-react-component-with-jest-gulp-and-react-test-utils/

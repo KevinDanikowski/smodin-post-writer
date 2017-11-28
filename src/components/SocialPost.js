@@ -52,7 +52,6 @@ class SocialPost extends Component {
                         :
                         <p className='pa0 ma0'><strong className='user-select-n'>Rewrite: </strong>{findAllParametersInString(this.props.socialPost.message, '{{', '}}', this.props.allParametersQuery.allParameters)} </p>
                     }
-                    <input type='file' name='ImageStyle'/>
                 </div>
             </div>
         )
